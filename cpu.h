@@ -6,6 +6,8 @@
 //
 #pragma once
 #include <cstdint>
+#include <cstddef>
+#include <cstdlib>
 
 struct CPU
 {
@@ -39,6 +41,7 @@ const uint8_t MOV_RAX_IMM64 = 0xb8;
 const uint8_t ADD_RAX_IMM32 = 0x05;
 const uint8_t SUB_RAX_IMM32 = 0x2D;
 const uint8_t CMP_RAX_IMM32 = 0x3D;
+const uint8_t INC_RAX = 0x20;
 
 const uint8_t MOV_RBX_IMM64 = 0xBB;
 
@@ -59,5 +62,7 @@ const uint8_t HLT = 0xF4;
 
 
 //helper method
+void push64(CPU& cpu, uint64_t value);
+uint64_t pop64(CPU& cpu);
 void dumpRegisters(const CPU& cpu);
 void runCPU(CPU& cpu);

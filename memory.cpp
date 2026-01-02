@@ -8,8 +8,17 @@
 #include <cstdint>
 
 uint64_t read64(uint8_t* memory, size_t addr) {
+    uint64_t value = 0;
     for (int i = 0; i < 8; i++) {
         value |= ((uint64_t)memory[addr+i]) << (8*i);
+    }
+    return value;
+}
+
+uint32_t read32(uint8_t* memory, size_t addr) {
+    uint32_t value = 0;
+    for (int i = 0; i < 4; i++) {
+        value |= ((uint32_t)memory[addr+i]) << (8*i);
     }
     return value;
 }

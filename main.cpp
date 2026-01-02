@@ -6,33 +6,36 @@
 //
 #include "cpu.h"
 #include "memory.h"
-#include <stdint>
-#include <stdlib>
-
+#include <cstdint>
+#include <cstdlib>
+#include <cstddef>
+#include <cstdio>
 
 
 int main() {
     uint8_t program[] = {
-        MOV_RAX_IMM64, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        ADD_RAX_IMM32, 0x03, 0x00, 0x00, 0x00,
-        CMP_RAX_IMM32, 0x08, 0x00, 0x00, 0x00,
-        JE_REL8, 0x02,
-        HLT
-    }
+        MOV_RAX_IMM64, 0x01,0,0,0,0,0,0,0, // RAX = 1
+        CALL_REL32, 0x05,0,0,0,             // call to +5 bytes
+        INC_RAX,                             // will run after return
+        HLT,                                 // stop
+        INC_RAX,                             // function body: RAX++
+        RET                                  // return
+    };
     
     CPU cpu = {};
     cpu.rip = 0;
-    cpu.rsp = 1024;
     cpu.halted = false;
 
-    cpu.memory_size = sizeof(program);
-    cpu.memory = (uint8_t*)malloc(cpu.memory_size);
-    cpu.rsp = cpu.memory_size;
+    cpu.memory_size = sizeof(program) + 1024;
+    cpu.memory = (uint8_t*)malloc(cpu.memory_size + 1024);
+    cpu.rsp = cpu.memory_size - 8;
     
     for (size_t i = 0; i < cpu.memory_size; i++) {
         cpu.memory[i] = program[i];
     }
     
     runCPU(cpu);
+    
+    free(cpu.memory);
     return 0;
 }
